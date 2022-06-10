@@ -7,18 +7,16 @@ export function Welcome() {
   return (
     <>
       <Title className={classes.title} align="center" mt={100}>
-        Welcome to{' '}
+        Bienvenidos a {' '}
         <Text inherit variant="gradient" component="span">
-          Mantine
+          GTIME
         </Text>
       </Title>
       <Text color="dimmed" align="center" size="lg" sx={{ maxWidth: 580 }} mx="auto" mt="xl">
-        This starter Next.js project includes a minimal setup for server side rendering, if you want
-        to learn more on Mantine + Next.js integration follow{' '}
-        <Anchor href="https://mantine.dev/theming/next/" size="lg">
-          this guide
+      Plataformas de trazabilidad energética para energías limpias, desde la generación hasta su llegada a los usuarios, con información energética transparente y en tiempo real.{' '}
+        <Anchor href="https://gtime.io" size="lg">
+          GTIME.io
         </Anchor>
-        . To get started edit index.tsx file.
       </Text>
     </>
   );

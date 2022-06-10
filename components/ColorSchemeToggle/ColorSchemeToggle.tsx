@@ -16,9 +16,9 @@ export function ColorSchemeToggle() {
         })}
       >
         {colorScheme === 'dark' ? (
-          <SunIcon width={20} height={20} />
+          <SunIcon width={30} height={30} />
         ) : (
-          <MoonIcon width={20} height={20} />
+          <MoonIcon width={30} height={30} />
         )}
       </ActionIcon>
     </Group>
