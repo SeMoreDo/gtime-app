@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { UserProvider } from '@auth0/nextjs-auth0';
-import { AppContextProvider } from '../context/AppContext'
+import { AuthProvider } from '../context/GTIMEContext';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -19,8 +19,8 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   };
 
   return (
-    <AppContextProvider>
-      <UserProvider>
+    <UserProvider>
+      <AuthProvider>
         <Head>
           <title>GTIME</title>
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -34,8 +34,8 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
-      </UserProvider>
-    </AppContextProvider>
+      </AuthProvider>
+    </UserProvider>
 
   );
 }
