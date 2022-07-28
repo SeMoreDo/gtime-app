@@ -21,26 +21,27 @@ import { useUser } from '@auth0/nextjs-auth0';
 export default function HomePage() {
     const [gtimeData, setGTIMEData] = useState([]);
     const [gtimeCardData, setGTIMECardData] = useState([]);
-    const { user, error, isAuthenticated, isLoading } = useUser();
+    const { user, error, isLoading } = useUser();
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
     useEffect(() => {
-        console.log(user)
-        fetch(`/api/gtimeInfo?ownerId=${user['https://app.gtime.io/userdata'].ownerId}`)
-            .then((res) => res.json())
-            .then((resdata) => {
-                setGTIMEData(resdata.response);
-                resdata.response.forEach(infoData => {
-                    setGTIMECardData(prevData => [new Set([...prevData, <Grid.Col span={4}>
-                        <InitMeter 
-                        title={infoData.mainName}
-                        description={infoData.description}
-                        status={infoData.active}
-                        imgSrc={infoData.imageSource}
-                        />
-                    </Grid.Col>])]);
+        if (user) {
+            fetch(`/api/gtimeInfo?ownerId=${user['https://app.gtime.io/userdata'].ownerId}`)
+                .then((res) => res.json())
+                .then((resdata) => {
+                    setGTIMEData(resdata.response);
+                    resdata.response.forEach(infoData => {
+                        setGTIMECardData(prevData => [new Set([...prevData, <Grid.Col span={4}>
+                            <InitMeter
+                                title={infoData.mainName}
+                                description={infoData.description}
+                                status={infoData.active}
+                                imgSrc={infoData.imageSource}
+                            />
+                        </Grid.Col>])]);
+                    })
                 })
-            })
+        }
     }, [])
     return (<AppShell
         styles={{
@@ -68,7 +69,7 @@ export default function HomePage() {
                 {true ? <Text>Powered by Phineal</Text> : <Text>Phineal</Text>}
             </Footer>
         }
-        header={<GTIMEHeader/>
+        header={<GTIMEHeader />
         }
     >
         <Center>
@@ -78,11 +79,11 @@ export default function HomePage() {
             <Grid grow gutter="xs">
                 <Grid.Col span={4}>
                     <Center>
-                        <div ><InitStock ownerId={user['https://app.gtime.io/userdata'].ownerId}/></div>
+                        <div ><InitStock ownerId={user['https://app.gtime.io/userdata'].ownerId} /></div>
                     </Center>
                 </Grid.Col>
                 <Grid.Col span={4}><div style={{ height: 500 }}>
-                    <InitPie ownerId={user['https://app.gtime.io/userdata'].ownerId}/>
+                    <InitPie ownerId={user['https://app.gtime.io/userdata'].ownerId} />
                 </div></Grid.Col>
                 {gtimeCardData}
             </Grid>

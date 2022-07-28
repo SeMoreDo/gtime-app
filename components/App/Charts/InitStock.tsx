@@ -7,29 +7,35 @@ import { Loader } from '@mantine/core';
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
 }
-
-export default function InitStock(props) {
-    const [stockData, setStockData] = useState([]);
-    const [isLoading, setLoading] = useState(false);
-    const [opts, setOpts] = useState();
+type Props = {
+    ownerId: string;
+}
+type Row = {
+    [key: string]: any;
+}
+export default function InitStock(props: Props) {
+    const [stockData, setStockData] = useState<Array<any>>([]);
+    const [isLoading, setLoading] = useState<Boolean>(false);
+    const [opts, setOpts] = useState<Object>({});
 
     useEffect(() => {
         const timezoneOffset = (new Date()).getTimezoneOffset();
         // console.log(timezoneOffset)
-        let auxStockData = []
+        let auxStockData: Array<any> = [] 
         setLoading(true);
         fetch(`api/gtimeInfo?ownerId=${props.ownerId}`).then((res) => res.json()).then(resGTIMEInfo => {
-            resGTIMEInfo.response.forEach((row, index, array) => {
+            resGTIMEInfo.response.forEach((row: Row, index: number, array: Array<any>) => {
                 fetch(`/api/gtimeByIdLatestData?hashID=${row.hashID}`)
                     .then((res) => res.json())
                     .then((resdata) => {
-                        resdata.forEach((value, idx, arr) => {
-                            auxStockData.push(value);//Offset timezone
+                        resdata.forEach((value: Array<any>, idx: number, arr: Array<any>) => {
+                            console.log(value)
+                            auxStockData.push(value);
                             if (idx + 1 === arr.length) {
-                                let data = auxStockData.sort((a, b) => a[0] - b[0])
+                                // let data: Array<any> = auxStockData.sort((a, b) => a[0] - b[0])
                                 if ((index + 1) === array.length) {
                                     // console.log(data);
-                                    setStockData(data);
+                                    setStockData(auxStockData.sort((a, b) => a[0] - b[0]));
                                     setOpts({
                                         chart: {
                                             backgroundColor: {
@@ -45,7 +51,7 @@ export default function InitStock(props) {
                                             text: 'Energía Trazada'
                                         },
                                         series: [{
-                                            data: [...new Set(data)]
+                                            data: [...Array.from(new Set(auxStockData.sort((a, b) => a[0] - b[0])))]
                                         }]
                                     })
                                 }

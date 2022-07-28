@@ -17,23 +17,20 @@ import {
   Container
 } from '@mantine/core'
 import AppLayout from '../components/App/AppLayout';
-import { useAuth } from '../context/GTIMEContext';
 
 export default function Estado() {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const { userData } = useAuth();
-  console.log(userData);
   useEffect(() => {
-    setLoading(true);
-    fetch(`/api/gtimeInfo?ownerId=${userData.user['https://app.gtime.io/userdata'].ownerId}`)
-      .then((res) => res.json())
-      .then((resdata) => {
-        resdata.response.forEach(infoData => {
-          setData(prevData => [new Set([...prevData, <div>{infoData.mainName}</div>])]);
-        })
-        setLoading(false)
-      })
+    // setLoading(true);
+    // fetch(`/api/gtimeInfo?ownerId=${userData.user['https://app.gtime.io/userdata'].ownerId}`)
+    //   .then((res) => res.json())
+    //   .then((resdata) => {
+    //     resdata.response.forEach(infoData => {
+    //       setData(prevData => [new Set([...prevData, <div>{infoData.mainName}</div>])]);
+    //     })
+    //     setLoading(false)
+    //   })
   }, [])
 
   if (isLoading) return <p><Loader></Loader></p>

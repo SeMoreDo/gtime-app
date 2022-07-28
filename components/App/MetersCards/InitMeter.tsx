@@ -1,7 +1,14 @@
 import React, { useState} from "react";
 import { Card, Image, Text, Badge, Button, Group, useMantineTheme } from '@mantine/core';
 
-export default function InitMeter(props) {
+type Props = {
+  title: string;
+  description: Array<any>;
+  status: boolean;
+  imgSrc: string;
+}
+
+export default function InitMeter(props: Props) {
   const [ cardData, setCardData ] = useState({
     title: props.title?props.title:'Title',
     description: props.description?props.description:'Description',

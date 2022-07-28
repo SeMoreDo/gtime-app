@@ -8,7 +8,7 @@ import {
 } from '@mantine/core';
 
 export default function HomePage() {
-  const { user, error, isAuthenticated, isLoading } = useUser();
+  const { user, error, isLoading } = useUser();
   const [ opened, setOpened ] = useState(false);
   
   // useEffect(() => {

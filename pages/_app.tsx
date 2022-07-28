@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { AppProps } from 'next/app';
 import { getCookie, setCookies } from 'cookies-next';
@@ -6,7 +6,6 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { UserProvider } from '@auth0/nextjs-auth0';
-import { AuthProvider } from '../context/GTIMEContext';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -20,7 +19,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 
   return (
     <UserProvider>
-      <AuthProvider>
         <Head>
           <title>GTIME</title>
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -34,12 +32,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
-      </AuthProvider>
     </UserProvider>
 
   );
 }
 
-App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
-});
+// App.getInitialProps = (ctx: GetServerSideProps) => ({
+//   colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
+// });

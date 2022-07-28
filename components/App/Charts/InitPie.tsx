@@ -6,8 +6,14 @@ import { Loader } from '@mantine/core';
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-export default function InitPie(props) {
-    const [pieData, setPieData] = useState([]);
+type Props = {
+    ownerId: string;
+}
+type Row = {
+    [key: string]: any;
+}
+export default function InitPie(props: Props) {
+    const [pieData, setPieData] = useState<Array<Row>>([]);
     const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -17,10 +23,10 @@ export default function InitPie(props) {
                 .then((res) => res.json())
                 .then((resdata) => {
                     console.log(resdata, resGTIMEInfo.response)
-                    resGTIMEInfo.response.forEach((row: Array) => {
+                    resGTIMEInfo.response.forEach((row: Row) => {
                         Object.keys(resdata).forEach(prop => {
                             if (row.hashID === prop) {
-                                setPieData(prevData => [...prevData, {
+                                setPieData((prevData: Array<Row>)=> [...prevData, {
                                     "id": row.mainName,
                                     "label": row.mainName,
                                     "value": (resdata[prop] / 1000).toFixed(2),

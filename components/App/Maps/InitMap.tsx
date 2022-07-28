@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Map, Marker } from 'pigeon-maps';
 
-export default function InitMap(props) {
-    const [center, setCenter] = useState([-27.500207, -70.648603])
+type Geo = [ number , number]
+type Props = {
+    place: string;
+    data: Array<any>;
+}
+
+export default function InitMap(props: Props) {
+    const [center, setCenter] = useState<Geo>([-27.500207, -70.648603])
     console.log(props)
     if (props.place !== undefined) {
         props.data.forEach(gtimePlace => {
