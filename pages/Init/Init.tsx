@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import {
     AppShell,
     Navbar,
@@ -13,34 +14,50 @@ import {
 import NavigationBar from '../../components/App/Navbar/Navbar';
 import InitMap from '../../components/App/Maps/InitMap';
 import InitStock from '../../components/App/Charts/InitStock';
-import InitPie from '../../components/App/Charts/InitPie';
+// import InitPie from '../../components/App/Charts/InitPie';
 import InitMeter from '../../components/App/MetersCards/InitMeter';
 import GTIMEHeader from '../../components/App/Header/GTIMEHeader';
 import { useUser } from '@auth0/nextjs-auth0';
 
+const InitPie = dynamic(()=> import("../../components/App/Charts/InitPie"), {
+    ssr: false
+})
+type Row = {
+    [key: string]: any;
+}
+type CardElement = React.ReactElement[]
 export default function HomePage() {
     const [gtimeData, setGTIMEData] = useState([]);
-    const [gtimeCardData, setGTIMECardData] = useState([]);
+    const [gtimeCardData, setGTIMECardData] = useState<any[]>([]);
+    const [gtimeUser, setGTIMEUser] = useState();//@ts-ignore: Type 'undefined' is not assignable to type 'string'.
     const { user, error, isLoading } = useUser();
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
     useEffect(() => {
-        if (user) {
-            fetch(`/api/gtimeInfo?ownerId=${user['https://app.gtime.io/userdata'].ownerId}`)
-                .then((res) => res.json())
-                .then((resdata) => {
-                    setGTIMEData(resdata.response);
-                    resdata.response.forEach(infoData => {
-                        setGTIMECardData(prevData => [new Set([...prevData, <Grid.Col span={4}>
-                            <InitMeter
-                                title={infoData.mainName}
-                                description={infoData.description}
-                                status={infoData.active}
-                                imgSrc={infoData.imageSource}
-                            />
-                        </Grid.Col>])]);
+        try {
+            if (user!) {// @ts-ignore: Object is of type 'unknown'.
+                setGTIMEUser(user['https://app.gtime.io/userdata']!)//@ts-ignore: Object is of type 'unknown'.
+                fetch(`/api/gtimeInfo?ownerId=${user['https://app.gtime.io/userdata']!.ownerId}`)// @ts-ignore: Object is of type 'unknown'.
+                    .then((res) => res.json())
+                    .then((resdata) => {
+                        setGTIMEData(resdata.response);
+                        resdata.response.forEach((infoData: Row) => {
+                            setGTIMECardData((prevData: Array<React.ReactElement[]>) => {
+                                return Array.from(new Set([...prevData, <Grid.Col span={4}>
+                                    <InitMeter
+                                        title={infoData.mainName}
+                                        description={infoData.description}
+                                        status={infoData.active}
+                                        imgSrc={infoData.imageSource} />
+                                </Grid.Col>]));
+                            });
+                        })
                     })
-                })
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e)
+            }
         }
     }, [])
     return (<AppShell
@@ -73,17 +90,17 @@ export default function HomePage() {
         }
     >
         <Center>
-            <InitMap data={gtimeData}></InitMap>
+            <InitMap data={gtimeData} place="" />
         </Center>
         <Center>
             <Grid grow gutter="xs">
                 <Grid.Col span={4}>
                     <Center>
-                        <div ><InitStock ownerId={user['https://app.gtime.io/userdata'].ownerId} /></div>
+                        <div ><InitStock ownerId={gtimeUser!} /></div>
                     </Center>
                 </Grid.Col>
                 <Grid.Col span={4}><div style={{ height: 500 }}>
-                    <InitPie ownerId={user['https://app.gtime.io/userdata'].ownerId} />
+                    <InitPie ownerId={gtimeUser!} />
                 </div></Grid.Col>
                 {gtimeCardData}
             </Grid>
