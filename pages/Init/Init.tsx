@@ -19,7 +19,7 @@ import InitMeter from '../../components/App/MetersCards/InitMeter';
 import GTIMEHeader from '../../components/App/Header/GTIMEHeader';
 import { useUser } from '@auth0/nextjs-auth0';
 
-const InitPie = dynamic(()=> import("../../components/App/Charts/InitPie"), {
+const InitPie = dynamic(() => import("../../components/App/Charts/InitPie"), {
     ssr: false
 })
 type Row = {
@@ -29,15 +29,16 @@ type CardElement = React.ReactElement[]
 export default function HomePage() {
     const [gtimeData, setGTIMEData] = useState([]);
     const [gtimeCardData, setGTIMECardData] = useState<any[]>([]);
-    const [gtimeUser, setGTIMEUser] = useState();//@ts-ignore: Type 'undefined' is not assignable to type 'string'.
+    const [gtimeUser, setGTIMEUser] = useState<string>();//@ts-ignore: Type 'undefined' is not assignable to type 'string'.
     const { user, error, isLoading } = useUser();
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
     useEffect(() => {
         try {
             if (user!) {// @ts-ignore: Object is of type 'unknown'.
-                setGTIMEUser(user['https://app.gtime.io/userdata']!)//@ts-ignore: Object is of type 'unknown'.
-                fetch(`/api/gtimeInfo?ownerId=${user['https://app.gtime.io/userdata']!.ownerId}`)// @ts-ignore: Object is of type 'unknown'.
+                // console.log(user['https://app.gtime.io/userdata'].ownerId!);
+                setGTIMEUser(user['https://app.gtime.io/userdata'].ownerId!)//@ts-ignore: Object is of type 'unknown'.
+                fetch(`/api/gtimeInfo?ownerId=${user['https://app.gtime.io/userdata'].ownerId!}`)// @ts-ignore: Object is of type 'unknown'.
                     .then((res) => res.json())
                     .then((resdata) => {
                         setGTIMEData(resdata.response);
@@ -89,19 +90,20 @@ export default function HomePage() {
         header={<GTIMEHeader />
         }
     >
-        <Center>
+        <Center key="map">
             <InitMap data={gtimeData} place="" />
         </Center>
-        <Center>
+        <Center key="stock">
             <Grid grow gutter="xs">
                 <Grid.Col span={4}>
-                    <Center>
-                        <div ><InitStock ownerId={gtimeUser!} /></div>
+                    <Center><InitStock ownerId={gtimeUser!} />
                     </Center>
                 </Grid.Col>
-                <Grid.Col span={4}><div style={{ height: 500 }}>
-                    <InitPie ownerId={gtimeUser!} />
-                </div></Grid.Col>
+                <Grid.Col span={4}>
+                    <div style={{ height: 500 }}>
+                        <InitPie ownerId={gtimeUser!} />
+                    </div>
+                </Grid.Col>
                 {gtimeCardData}
             </Grid>
         </Center>

@@ -22,7 +22,7 @@ export default function InitPie(props: Props) {
             fetch(`/api/gtimeSummaries`)
                 .then((res) => res.json())
                 .then((resdata) => {
-                    console.log(resdata, resGTIMEInfo.response)
+                    // console.log(resdata, resGTIMEInfo.response)
                     resGTIMEInfo.response.forEach((row: Row) => {
                         Object.keys(resdata).forEach(prop => {
                             if (row.hashID === prop) {

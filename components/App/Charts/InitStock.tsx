@@ -19,9 +19,8 @@ export default function InitStock(props: Props) {
     const [opts, setOpts] = useState<Object>({});
 
     useEffect(() => {
-        const timezoneOffset = (new Date()).getTimezoneOffset();
         // console.log(timezoneOffset)
-        let auxStockData: Array<any> = [] 
+        const auxStockData: Array<any> = [] 
         setLoading(true);
         fetch(`api/gtimeInfo?ownerId=${props.ownerId}`).then((res) => res.json()).then(resGTIMEInfo => {
             resGTIMEInfo.response.forEach((row: Row, index: number, array: Array<any>) => {
@@ -29,20 +28,18 @@ export default function InitStock(props: Props) {
                     .then((res) => res.json())
                     .then((resdata) => {
                         resdata.forEach((value: Array<any>, idx: number, arr: Array<any>) => {
-                            console.log(value)
                             auxStockData.push(value);
                             if (idx + 1 === arr.length) {
                                 // let data: Array<any> = auxStockData.sort((a, b) => a[0] - b[0])
                                 if ((index + 1) === array.length) {
-                                    // console.log(data);
-                                    setStockData(auxStockData.sort((a, b) => a[0] - b[0]));
+                                    setStockData([...Array.from(new Set(auxStockData.sort((a, b) => a[0] - b[0])))]);
                                     setOpts({
                                         chart: {
                                             backgroundColor: {
                                                 linearGradient: [0, 0, 100, 500],
                                                 stops: [
-                                                    [0, 'rgb(155, 255, 255)'],
-                                                    [1, 'rgb(10, 200, 255)']
+                                                    [0, 'rgb(155, 25, 255)'],
+                                                    [1, 'rgb(10, 20, 25)']
                                                 ]
                                             },
                                             type: 'line',
@@ -51,7 +48,7 @@ export default function InitStock(props: Props) {
                                             text: 'Energía Trazada'
                                         },
                                         series: [{
-                                            data: [...Array.from(new Set(auxStockData.sort((a, b) => a[0] - b[0])))]
+                                            data: stockData
                                         }]
                                     })
                                 }
@@ -67,6 +64,6 @@ export default function InitStock(props: Props) {
         return (<Loader />)
     }
     return (
-        <HighchartsReact highcharts={Highcharts} options={opts} constructorType={'stockChart'} />
+        <HighchartsReact highcharts={Highcharts} options={opts} constructorType="stockChart" />
     )
 }
