@@ -34,9 +34,7 @@ export default function HomePage() {
   }
   if (user) {
     return (
-      <Center>
         <Init />
-      </Center>
     );
   }
   return (<Login />);

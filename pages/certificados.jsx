@@ -33,17 +33,17 @@ export default function Validacion() {
     const { user, error, isAuthenticated, isLoading } = useUser();
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
-    console.log(filenames);
+    // console.log(filenames);
     const handleChange = (value) => {
-        console.log(value)
+        // console.log(value)
         setTableData([])
         setPlace(value)
         gtimeData.forEach(gtime => {
             filenames.forEach(file => {
-                console.log({cme1:file.slice(0,2),cme2: gtime.hashID.slice(0, 2)})
+                // console.log({cme1:file.slice(0,2),cme2: gtime.hashID.slice(0, 2)})
                 if(value === gtime.mainName){
                     if (file.slice(0,2) === gtime.hashID.slice(0, 2)) {
-                        console.log(file)
+                        // console.log(file)
                         setTableData(prevData => [new Set([...prevData, <tr key={gtime.subName}>
                             <td>{gtime.mainName}</td>
                             <td>{gtime.hashID}</td>
@@ -58,7 +58,7 @@ export default function Validacion() {
     }
     useEffect(() => {
         let selectAux = []
-        console.log(user);
+        // console.log(user);
         if (user['https://app.gtime.io/userdata'] !== undefined) {
             fetch(`/api/gtimeInfo?ownerId=${user['https://app.gtime.io/userdata'].ownerId}`)
                 .then((res) => res.json())
@@ -70,7 +70,7 @@ export default function Validacion() {
                         }
                         if (resdata.response.length === idx + 1) {
                             setSelectData(selectAux);
-                            console.log(selectData, selectAux)
+                            // console.log(selectData, selectAux)
                         }
                         setGTIMECardData(prevData => [new Set([...prevData, <Grid.Col span={4}>
                             <InitMeter

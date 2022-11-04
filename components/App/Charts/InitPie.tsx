@@ -19,7 +19,7 @@ export default function InitPie(props: Props) {
     useEffect(() => {
         setLoading(true);
         fetch(`api/gtimeInfo?ownerId=${props.ownerId}`).then((res) => res.json()).then(resGTIMEInfo => {
-            fetch(`/api/gtimeSummaries`)
+            fetch('/api/gtimeSummaries')
                 .then((res) => res.json())
                 .then((resdata) => {
                     // console.log(resdata, resGTIMEInfo.response)

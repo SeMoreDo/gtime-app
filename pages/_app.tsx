@@ -1,42 +1,40 @@
-import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { AppProps } from 'next/app';
-import { getCookie, setCookie } from 'cookies-next';
 import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
-import { NotificationsProvider } from '@mantine/notifications';
 import { UserProvider } from '@auth0/nextjs-auth0';
+import { getCookie, setCookie } from 'cookies-next';
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+export default function App(props: AppProps) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
-
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
     setCookie('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
   };
-
   return (
-    <UserProvider>
-        <Head>
-          <title>GTIME</title>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-          <link rel="shortcut icon" href="/favicon.svg" />
-        </Head>
-
+    <>
+      <Head>
+        <title>Plataforma Siemens - GTIME</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
+      <UserProvider>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-          <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-            <NotificationsProvider>
-              <Component {...pageProps} />
-            </NotificationsProvider>
+          <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{
+              /** Put your mantine theme override here */
+              colorScheme: colorScheme,
+              fontFamily: 'Montserrat,Helvetica,Arial,Lucida,sans-serif',
+            }}
+          >
+            <Component {...pageProps} />
           </MantineProvider>
         </ColorSchemeProvider>
-    </UserProvider>
+      </UserProvider>
 
+    </>
   );
 }
-
-// App.getInitialProps = (ctx: GetServerSideProps) => ({
-//   colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
-// });

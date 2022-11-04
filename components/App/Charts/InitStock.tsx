@@ -27,6 +27,7 @@ export default function InitStock(props: Props) {
                 fetch(`/api/gtimeByIdLatestData?hashID=${row.hashID}`)
                     .then((res) => res.json())
                     .then((resdata) => {
+                        console.log(resdata);
                         resdata.forEach((value: Array<any>, idx: number, arr: Array<any>) => {
                             auxStockData.push(value);
                             if (idx + 1 === arr.length) {
@@ -45,10 +46,13 @@ export default function InitStock(props: Props) {
                                             type: 'line',
                                         },
                                         title: {
-                                            text: 'Energía Trazada'
+                                            text: 'Energía Trazada',
+                                            style: {
+                                                color: "#FFF"
+                                            }
                                         },
                                         series: [{
-                                            data: stockData
+                                            data: [...Array.from(new Set(auxStockData.sort((a, b) => a[0] - b[0])))]
                                         }]
                                     })
                                 }

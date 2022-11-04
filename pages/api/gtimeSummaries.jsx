@@ -10,5 +10,6 @@ export default withApiAuthRequired(async function gtimeSummaries(req, res) {
     }
   });
   const summaries = await response.json();
+  console.table(summaries);
   res.status(200).json(summaries);
 });

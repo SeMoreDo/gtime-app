@@ -1,34 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Map, Marker } from 'pigeon-maps';
+import React from "react"
+import { Map, Marker } from "pigeon-maps"
 
-type Geo = [number, number]
-type Props = {
-    place: string;
-    data: Array<any>;
-}
+export default function MyMap(origins) {
+  let coord = [0,0];
 
-export default function InitMap(props: Props) {
-    const [center, setCenter] = useState<Geo>([-27.500207, -70.648603])
-    // useEffect(()=>{
-        
-    // },[])
-    if (props.place !== undefined) {
-        props.data.forEach(gtimePlace => {
-            if (gtimePlace.mainName === props.place) {
-                setCenter([gtimePlace.latitud, gtimePlace.longitud])
-                return (<React.Fragment>{<Map height={350} defaultCenter={center} defaultZoom={7}>
-                    <Marker key={gtimePlace.hashID} width={50} anchor={[gtimePlace.latitud, gtimePlace.longitud]} />
-                </Map>}</React.Fragment>)
-            } else {
-                return (<React.Fragment></React.Fragment>)
-            }
-        })
-    } else {
-        return (<React.Fragment>{<Map height={350} defaultCenter={center} defaultZoom={4}>
-            {props.data.map(element => <Marker key={element.hashID} width={50} anchor={[element.latitud, element.longitud]} />)}
-        </Map>}</React.Fragment>)
-    }
-    return (<React.Fragment>{<Map height={350} defaultCenter={center} defaultZoom={4}>
-        {props.data.map(element => <Marker key={element.hashID} width={50} anchor={[element.latitud, element.longitud]} />)}
-    </Map>}</React.Fragment>)
+  if(origins.origins.length>=1){
+    origins.origins.forEach((origin,index,_)=>{
+      coord[0]+=Number(origin['latitud'])
+      coord[1]+=Number(origin['longitud'])
+      console.log(index)
+      if (index+1== origins.origins.length){
+        coord = [coord[0]/origins.origins.length,coord[1]/origins.origins.length]
+      }
+    });
+  } else {
+    coord = [-33.403085,-70.57058]
+  }
+  console.log(coord)
+  return (
+    <Map height={300} defaultCenter={coord} defaultZoom={5}>
+      {
+        origins.origins.length>=1?
+        origins.origins.map(origin=>{
+          return <Marker key={origin.hashID} width={50} anchor={[Number(origin.latitud), Number(origin.longitud)]} />
+        }):<Marker key={'default'} width={50} anchor={coord} />
+      }
+    </Map>
+  )
 }
